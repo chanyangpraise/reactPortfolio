@@ -60,7 +60,7 @@ router.get("/auth_valid", (req, res) => {
               });
             } else {
               res.status(200).json({
-                status: "sucsess",
+                status: "success",
                 message: "일치합니다.",
               });
             }
@@ -81,6 +81,8 @@ router.post("/register", (req, res) => {
     `SELECT u_email FROM user WHERE u_email = "${email}"`,
     (err, rows) => {
       if (err) {
+        console.log("1번 select");
+        console.log(err);
         res.status(500).json({
           status: "fail",
           message: "서버에서 에러가 발생 하였습니다.",
@@ -92,9 +94,11 @@ router.post("/register", (req, res) => {
         });
       } else {
         asyncSQL(
-          `INSERT INTO user (u_email, u_pwd, u_name, u_nick) VALUES ("${email}", "${encryptPwd}", "${name}", "${nick}";)`,
+          `INSERT INTO user (u_email, u_pwd, u_name, u_nick) VALUES ("${email}", "${encryptPwd}", "${name}", "${nick}");`,
           (err1, rows1) => {
             if (err1 || rows1.affectedRows < 1) {
+              console.log("2번 select");
+              console.log(err1);
               res.status(500).json({
                 status: "fail",
                 message: "서버에서 에러가 발생 하였습니다.",
