@@ -110,27 +110,42 @@ document.getElementById("signup-arrow").addEventListener("click", () => {
   }, 1200);
 });
 
-let condition = 0;
 document.getElementById("signup-submit").addEventListener("click", () => {
   const submitBtn = document.getElementById("signup-submit");
 
   submitBtn.style.transition = "transform 1s linear";
 
-  if (document.getElementById("sign_email").value && condition === 0) {
-    condition += 1;
+  if (document.getElementById("sign_email").value) {
     document.getElementById("sign_valid").style.visibility = "visible";
     submitBtn.style.transform = "translateY(-240px)";
+
+    const xhr = new XMLHttpRequest();
+    const data = {
+      email: document.getElementById("sign_email").value,
+    };
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === xhr.DONE) {
+        if (xhr.status === 201) {
+          document.getElementById("sign_valid").style.visibility = "visible";
+          submitBtn.style.transform = "translateY(-240px)";
+          console.log(xhr.responseText);
+        } else {
+          document.getElementById("sign-text").innerText =
+            "잠시 후 다시 시도 해 주세요.";
+          document.getElementById("sign-text").style.color = "red";
+          console.error(xhr.responseText);
+        }
+      }
+      xhr.open("POST", "http://localhost:3000/users/auth_email");
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(JSON.stringify(data));
+    };
   }
 
-  if (
-    document.getElementById("sign_valid").value.length === 6 &&
-    condition === 1
-  ) {
-    condition += 1;
+  if (document.getElementById("sign_valid").value.length === 6) {
     document.getElementById("sign_pw").style.visibility = "visible";
     submitBtn.style.transform = "translateY(-175px)";
-
-    console.log("2222222222222222");
 
     setTimeout(() => {
       document.getElementById("sign_name").style.visibility = "visible";
@@ -141,5 +156,39 @@ document.getElementById("signup-submit").addEventListener("click", () => {
       document.getElementById("sign_nick").style.visibility = "visible";
       submitBtn.style.transform = "translateY(-25px)";
     }, 1800);
+  }
+
+  if (
+    !!document.getElementById("sign_email").value &&
+    !!document.getElementById("sign_pw").value &&
+    !!document.getElementById("sign_name").value &&
+    !!document.getElementById("sign_nick").value
+  ) {
+    const xhr = new XMLHttpRequest();
+    const data = {
+      email: document.getElementById("sign_email").value,
+      pwd: document.getElementById("sign_pw").value,
+      name: document.getElementById("sign_name").value,
+      nick: document.getElementById("sign_nick").value,
+    };
+
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        // 이미 가입된 이메일이 있음.
+        console.log(xhr.responseText);
+      } else if (xhr.status === 201) {
+        console.log(xhr.responseText);
+        //가입 성공
+      } else {
+        // status가 200,201이 아닐떄 (400,500)일 떄
+        console.log(xhr.responseText);
+      }
+      xhr.onerror = () => {
+        console.error(xhr.responseText);
+      };
+      xhr.open("POST", "http://localhost:3000/users/register");
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(JSON.stringify(data));
+    };
   }
 });
