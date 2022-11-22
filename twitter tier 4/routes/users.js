@@ -17,14 +17,12 @@ router.post("/auth_mail", (req, res) => {
     `INSERT INTO auth (a_email, a_digit) VALUES ("${email}", "${rnd}");`,
     (err, rows) => {
       if (err || rows.affectedRows < 1) {
-        console.log(err);
         res.status(500).json({
           status: "fail",
           message: "서버에서 에러가 발생 했습니다.",
         });
       } else {
         sendMail(email, rnd, (err1) => {
-          console.log(err1);
           if (err1) {
             res.status(500).json({
               status: "fail",
@@ -123,7 +121,7 @@ router.post("/login", (req, res) => {
   const encryptPwd = encrypt(pwd);
 
   asyncSQL(
-    `SELECT u_pwd FROM user WHERE u_email = "${email}";`,
+    `SELECT u_id, u_pwd, u_name, u_nick FROM user WHERE u_email = "${email}";`,
     (err, rows) => {
       if (err) {
         res.status(500).json({
@@ -135,6 +133,11 @@ router.post("/login", (req, res) => {
           res.status(200).json({
             status: "success",
             message: "로그인 성공",
+            info: {
+              id: rows[0].u_id,
+              name: rows[0].u_name,
+              nick: rows[0].u_nick,
+            },
           });
         } else {
           res.status(200).json({
@@ -167,6 +170,7 @@ router.put("/changePwd", (req, res) => {
 
   asyncSQL(`SELECT u_pwd FROM user WHERE u_email = "${email}"`, (err, rows) => {
     if (err) {
+      console.log(err);
       res.status(500).json({
         status: "fail",
         message: "서버에서 에러가 발생 하였습니다.",
@@ -180,9 +184,10 @@ router.put("/changePwd", (req, res) => {
         });
       } else {
         asyncSQL(
-          `UPDATE user SET u_pwd = "${encryptPwd}" WHERE u_email = ${email}`,
+          `UPDATE user SET u_pwd = "${encryptPwd}" WHERE u_email = "${email}"`,
           (err1, rows1) => {
             if (err1) {
+              console.log(err1);
               res.status(500).json({
                 status: "fail",
                 message: "서버에서 에러가 발생 하였습니다.",
