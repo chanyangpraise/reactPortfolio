@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+	<div id="root"></div>
+</body>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+	const root = ReactDOM.createRoot(document.getElementById("root"));
+
+	// 4번
+	// const array = [
+	//   "일어나기",
+	//   "씻기",
+	//   "커피사기",
+	//   "출근하기",
+	//   "일하기",
+	//   "점심먹기",
+	//   "일하기",
+	//   "퇴근하기",
+	// ];
+	// function list() {
+	//   return <ul>{array2}</ul>;
+	// }
+
+	// 5번
+
+
+	// const todo = ["점심먹기", "저녁먹기", "간식먹기", "야식먹기"];
+	// const todoItem = todo.map((element) => {
+	//   return <li>{element}</li>;
+	// });
+
+	// function Todolist() {
+	//   return <ul>{array2}</ul>;
+	// }
+
+	root.render(<Todolist />);
+</script>
+
+</html>
