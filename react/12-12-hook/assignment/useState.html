@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+	<div id="root"></div>
+</body>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+	const root = ReactDOM.createRoot(document.getElementById("root"));
+	function AddArea(props) {
+		return (
+			<div>
+				<button onClick={props.onClick} value={props.value}>랜덤 숫자</button>
+			</div>
+		);
+	}
+
+	function ListItem(props) {
+		return <li>{props.value}</li>;
+	}
+
+	function TextLists(props) {
+		const items = props.items;
+		return (
+			<ul>
+				{items.map((value, index) => {
+					return (
+						<ListItem
+							key={index}
+							value={value}
+						>
+							{value}
+						</ListItem>
+					);
+				})}
+			</ul>
+		);
+	}
+
+	function ListControl(props) {
+		const [list, changeList] = React.useState([]);
+		const [value, changeValue] = React.useState("");
+
+		const handleChange = (e) => {
+			changeValue(e.target.value);
+		};
+
+		const handleInsert = () => {
+			changeList([...list, value]);
+			changeValue("");
+		};
+
+		const handleRemove = (index) => {
+			const lists = list;
+			changeList([
+				...lists.slice(0, index),
+				...lists.slice(index + 1, lists.length),
+			]);
+		};
+
+		return (
+			<React.Fragment>
+				<AddArea
+					value={value}
+					onChange={handleChange}
+					onClick={handleInsert}
+				/>
+				<TextLists items={list} onDoubleClick={handleRemove} />
+			</React.Fragment>
+		);
+	}
+
+	root.render(<ListControl />);
+</script>
+
+</html>

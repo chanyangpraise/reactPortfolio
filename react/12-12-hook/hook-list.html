@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+	<div id="root"></div>
+</body>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+	const root = document.getElementById("root");
+	const App = () => {
+		const data = React.useState(0);
+		console.log(data);
+		const [counter, change] = data;
+		function add() {
+			change((current) => current + 1);
+		}
+		const [counter2, change2] = React.useState(1);
+		function add2() {
+			change2((current) => current2 + 1);
+		}
+		return (
+			<div>
+				<span>클릭: {counter}</span>
+				<button style={{ color: "red" }} onClick={add}>
+					클릭
+				</button>
+			</div>
+		);
+	};
+	function ListControl(props) {
+		const [list, chnageList] = React.useState([1, 2, 3]);
+		const [value, chnageValue] = React.useState("");
+
+		const handleChange = (e) => {
+			chnageValue(e.target.value);
+		};
+
+		const handleInsert = () => {
+			chnageList([...list, value]);
+		};
+
+		const handleRemove = (index) => {
+			const lists = list;
+			chnageList([
+				...lists.slice(0, index),
+				...lists.slice(index + 1, lists.length),
+			]);
+		};
+
+		return (
+			<React.Fragment>
+				<AddArea value={value} onChange={handleChange} onClick={handleInsert} />
+				<TextLists items={list} onDoubleClick={handleRemove} />
+			</React.Fragment>
+		);
+	}
+
+	root.render(<ListControl />);
+
+	ReactDOM.render(<App />, root);
+</script>
+
+</html>
