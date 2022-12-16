@@ -1,16 +1,16 @@
 import React from "react";
-import { Form } from "react-router-dom";
+import { Form, useLoaderData } from "react-router-dom";
+import { getContact } from "../contacts";
 import Favorite from "./favorite";
 
+export async function loader({ params }) {
+  return getContact(params.contactId);
+}
+
 function Contact() {
-  const contact = {
-    first: "Your",
-    last: "Name",
-    avatar: "https://placekitten.com/g/200/200",
-    twitter: "your_handle",
-    notes: "Some notes",
-    favorite: true,
-  };
+  const contact = useLoaderData();
+  // 5버전에서도 사용 할 수 있다
+  // const param = useParams();
 
   return (
     <div id="contact">
@@ -59,16 +59,7 @@ function Contact() {
           <Form action="edit">
             <button type="submit">Edit</button>
           </Form>
-          <Form
-            method="post"
-            action="destroy"
-            onSubmit={(event) => {
-              // 이벤트가 발생 했을 때 원래 Form은 페이지가 전환이 되면서 데이터가 넘어갑니다.
-              // 그런데 우리는 React는 하나의 페이지에서 동작해야하기 때문에 페이지 이동이 되면 안되요.
-              // Form에서 submit에 기본 동작인 페이지 이동을 막는 함수가 밑에 event.preventDefault()입니다.
-              event.preventDefault();
-            }}
-          >
+          <Form method="post" action="destroy">
             <button type="submit">Delete</button>
           </Form>
         </div>
